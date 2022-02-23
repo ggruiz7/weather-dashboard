@@ -15,8 +15,8 @@ var currentTempEl = document.getElementById("current-temp");
 var currentHumEl = document.getElementById("current-hum");
 var currentWindEl = document.getElementById("current-wind");
 var currentUvEl = document.getElementById("current-uv");
-// const historyEl = document.getElementById("history");
-// var clearBtn = document.getElementById("clear");
+var historyEl = document.getElementById("history");
+var clearBtn = document.getElementById("clear");
 
 //
 var futureCast = document.getElementById("five-day-cast");
@@ -156,5 +156,34 @@ function updateFiveDay(data2) {
     cardHumidity.innerHTML = "Humidity: " + humidity + " %";
     cardDate.innerHTML = dateString;
     console.log(dateString);
+  }
+}
+
+btn.addEventListener("click", function () {
+  const searchTerm = search.value;
+  getApi(searchTerm);
+  searchHistory.push(searchTerm);
+  localStorage.setItem("search", JSON.stringify(searchHistory));
+  showSearchHistory();
+});
+
+clearBtn.addEventListener("click", function () {
+  localStorage.clear();
+  searchHistory = [];
+  showSearchHistory();
+});
+
+function showSearchHistory() {
+  historyEl.innerHTML = "";
+  for (let i = 0; i < searchHistory.length; i++) {
+    const historyItem = document.createElement("input");
+    historyItem.setAttribute("type", "text");
+    historyItem.setAttribute("readonly", true);
+    historyItem.setAttribute("class", "form-control d-block bg-white");
+    historyItem.setAttribute("value", searchHistory[i]);
+    historyItem.addEventListener("click", function () {
+      getApi(historyItem.value);
+    });
+    historyEl.append(historyItem);
   }
 }
